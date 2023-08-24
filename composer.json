@@ -1,15 +1,15 @@
 {
-    "name": "bandwidth-throttle/token-bucket",
+    "name": "marianperca/token-bucket",
     "type": "library",
     "description": "Implementation of the Token Bucket algorithm.",
     "keywords": ["token bucket", "bandwidth", "rate limit", "throttle", "throttling", "rate limiting"],
-    "homepage": "https://github.com/bandwidth-throttle/token-bucket",
+    "homepage": "https://github.com/marianperca/token-bucket",
     "license": "WTFPL",
     "authors": [
         {
-            "name": "Markus Malkusch",
-            "email": "markus@malkusch.de",
-            "homepage": "http://markus.malkusch.de",
+            "name": "Marian Perca",
+            "email": "marian.perca@gmail.com",
+            "homepage": "https://marianperca.com",
             "role": "Developer"
         }
     ],

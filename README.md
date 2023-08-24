@@ -144,11 +144,5 @@ connection is just delayed to the desired rate.
 # License and authors
 
 This project is free and under the WTFPL.
-Responsible for this project is Markus Malkusch markus@malkusch.de.
+This project is forked from Markus Malkusch markus@malkusch.de. [Here is the original repo](https://github.com/bandwidth-throttle/token-bucket)
 
-## Donations
-
-If you like this project and feel generous donate a few Bitcoins here:
-[1335STSwu9hST4vcMRppEPgENMHD2r1REK](bitcoin:1335STSwu9hST4vcMRppEPgENMHD2r1REK)
-
-[![Build Status](https://travis-ci.org/bandwidth-throttle/token-bucket.svg?branch=master)](https://travis-ci.org/bandwidth-throttle/token-bucket)
