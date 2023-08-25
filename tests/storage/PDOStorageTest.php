@@ -2,6 +2,10 @@
 
 namespace bandwidthThrottle\tokenBucket\storage;
 
+use InvalidArgumentException;
+use LengthException;
+use PHPUnit\Framework\TestCase;
+
 /**
  * Tests for PDOStorage.
  *
@@ -16,7 +20,7 @@ namespace bandwidthThrottle\tokenBucket\storage;
  * @license WTFPL
  * @see PDOStorage
  */
-class PDOStorageTest extends \PHPUnit_Framework_TestCase
+class PDOStorageTest extends TestCase
 {
 
     /**
@@ -24,7 +28,7 @@ class PDOStorageTest extends \PHPUnit_Framework_TestCase
      */
     private $storages = [];
     
-    protected function tearDown()
+    protected function tearDown(): void
     {
         foreach ($this->storages as $storage) {
             $storage->remove();
@@ -36,7 +40,7 @@ class PDOStorageTest extends \PHPUnit_Framework_TestCase
      *
      * @return PDO[][] The PDOs.
      */
-    public function providePDO()
+    public static function providePDO(): array
     {
         $cases = [
             [new \PDO("sqlite::memory:")],
@@ -60,10 +64,11 @@ class PDOStorageTest extends \PHPUnit_Framework_TestCase
      * Tests instantiation with a too long name should fail.
      *
      * @test
-     * @expectedException \LengthException
      */
     public function testTooLongNameFails()
     {
+        $this->expectException(LengthException::class);
+
         $pdo = new \PDO("sqlite::memory:");
         $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         new PDOStorage(str_repeat(" ", 129), $pdo);
@@ -86,11 +91,13 @@ class PDOStorageTest extends \PHPUnit_Framework_TestCase
      *
      * @param int $errorMode The invalid error mode.
      * @test
-     * @expectedException \InvalidArgumentException
+     *
      * @dataProvider provideTestInvalidErrorMode
      */
     public function testInvalidErrorMode($errorMode)
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $pdo = new \PDO("sqlite::memory:");
         $pdo->setAttribute(\PDO::ATTR_ERRMODE, $errorMode);
         new PDOStorage("test", $pdo);
@@ -101,7 +108,7 @@ class PDOStorageTest extends \PHPUnit_Framework_TestCase
      *
      * @return int[][] Invalid error modes.
      */
-    public function provideTestInvalidErrorMode()
+    public static function provideTestInvalidErrorMode(): array
     {
         return [
             [\PDO::ERRMODE_SILENT],
@@ -148,10 +155,12 @@ class PDOStorageTest extends \PHPUnit_Framework_TestCase
      * @param \PDO $pdo The PDO.
      * @dataProvider providePDO
      * @test
-     * @expectedException bandwidthThrottle\tokenBucket\storage\StorageException
+     *
      */
     public function testBootstrapFailsForExistingRow(\PDO $pdo)
     {
+        $this->expectException(StorageException::class);
+
         $storageA = new PDOStorage("A", $pdo);
         $storageA->bootstrap(0);
         $this->storages[] = $storageA;

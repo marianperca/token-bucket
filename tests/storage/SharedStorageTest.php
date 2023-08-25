@@ -3,6 +3,7 @@
 namespace bandwidthThrottle\tokenBucket\storage;
 
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\TestCase;
 use Redis;
 use Predis\Client;
 
@@ -22,7 +23,7 @@ use Predis\Client;
  * @license WTFPL
  * @see Storage
  */
-class SharedStorageTest extends \PHPUnit_Framework_TestCase
+class SharedStorageTest extends TestCase
 {
 
     /**
@@ -30,7 +31,7 @@ class SharedStorageTest extends \PHPUnit_Framework_TestCase
      */
     private $storages = [];
     
-    protected function tearDown()
+    protected function tearDown(): void
     {
         foreach ($this->storages as $storage) {
             try {
@@ -46,7 +47,7 @@ class SharedStorageTest extends \PHPUnit_Framework_TestCase
      *
      * @return callable[][] Storage factories.
      */
-    public function provideStorageFactories()
+    public static function provideStorageFactories(): array
     {
         $cases = [
             [function ($name) {

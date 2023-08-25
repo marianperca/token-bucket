@@ -2,37 +2,40 @@
 
 namespace bandwidthThrottle\tokenBucket\storage;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Tests for IPCStorage.
  *
  * @author Markus Malkusch <markus@malkusch.de>
  * @link bitcoin:1335STSwu9hST4vcMRppEPgENMHD2r1REK Donations
  * @license WTFPL
- * @see IPCStorage
+ * @see  IPCStorage
  */
-class IPCStorageTest extends \PHPUnit_Framework_TestCase
+class IPCStorageTest extends TestCase
 {
 
     /**
      * Tests building fails for an invalid key.
      *
      * @test
-     * @expectedException bandwidthThrottle\tokenBucket\storage\StorageException
      */
     public function testBuildFailsForInvalidKey()
     {
-        @new IPCStorage("invalid");
+        $this->expectException(StorageException::class);
+        @new IPCStorage(-1);
     }
 
     /**
      * Tests remove() fails.
      *
      * @test
-     * @expectedException bandwidthThrottle\tokenBucket\storage\StorageException
-     * @expectedExceptionMessage Could not release shared memory.
      */
     public function testRemoveFails()
     {
+        $this->expectExceptionMessage("Could not release shared memory.");
+        $this->expectException(StorageException::class);
+
         $storage = new IPCStorage(ftok(__FILE__, "a"));
         $storage->remove();
         @$storage->remove();
@@ -42,14 +45,15 @@ class IPCStorageTest extends \PHPUnit_Framework_TestCase
      * Tests removing semaphore fails.
      *
      * @test
-     * @expectedException bandwidthThrottle\tokenBucket\storage\StorageException
-     * @expectedExceptionMessage Could not remove semaphore.
      */
     public function testfailRemovingSemaphore()
     {
-        $key     = ftok(__FILE__, "a");
+        $this->expectExceptionMessage("Could not remove semaphore.");
+        $this->expectException(StorageException::class);
+
+        $key = ftok(__FILE__, "a");
         $storage = new IPCStorage($key);
-        
+
         sem_remove(sem_get($key));
         @$storage->remove();
     }
@@ -58,10 +62,11 @@ class IPCStorageTest extends \PHPUnit_Framework_TestCase
      * Tests setMicrotime() fails.
      *
      * @test
-     * @expectedException bandwidthThrottle\tokenBucket\storage\StorageException
      */
     public function testSetMicrotimeFails()
     {
+        $this->expectException(StorageException::class);
+
         $storage = new IPCStorage(ftok(__FILE__, "a"));
         $storage->remove();
         @$storage->setMicrotime(123);
@@ -71,10 +76,11 @@ class IPCStorageTest extends \PHPUnit_Framework_TestCase
      * Tests getMicrotime() fails.
      *
      * @test
-     * @expectedException bandwidthThrottle\tokenBucket\storage\StorageException
      */
     public function testGetMicrotimeFails()
     {
+        $this->expectException(StorageException::class);
+
         $storage = new IPCStorage(ftok(__FILE__, "b"));
         @$storage->getMicrotime();
     }

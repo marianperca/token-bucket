@@ -2,6 +2,9 @@
 
 namespace bandwidthThrottle\tokenBucket\util;
 
+use bandwidthThrottle\tokenBucket\storage\StorageException;
+use PHPUnit\Framework\TestCase;
+
 /**
  * Tests for DoublePacker.
  *
@@ -10,7 +13,7 @@ namespace bandwidthThrottle\tokenBucket\util;
  * @license WTFPL
  * @see DoublePacker
  */
-class DoublePackerTest extends \PHPUnit_Framework_TestCase
+class DoublePackerTest extends TestCase
 {
 
     /**
@@ -32,7 +35,7 @@ class DoublePackerTest extends \PHPUnit_Framework_TestCase
      *
      * @return array Test cases.
      */
-    public function provideTestPack()
+    public static function provideTestPack(): array
     {
         return [
             [pack("d", 0)  , 0],
@@ -48,10 +51,12 @@ class DoublePackerTest extends \PHPUnit_Framework_TestCase
      *
      * @test
      * @dataProvider provideTestUnpackFails
-     * @expectedException \bandwidthThrottle\tokenBucket\storage\StorageException
+     *
      */
     public function testUnpackFails($input)
     {
+        $this->expectException(StorageException::class);
+
         DoublePacker::unpack($input);
     }
     
@@ -60,7 +65,7 @@ class DoublePackerTest extends \PHPUnit_Framework_TestCase
      *
      * @return array Test cases.
      */
-    public function provideTestUnpackFails()
+    public static function provideTestUnpackFails(): array
     {
         return [
             [""],
@@ -88,7 +93,7 @@ class DoublePackerTest extends \PHPUnit_Framework_TestCase
      *
      * @return array Test cases.
      */
-    public function provideTestUnpack()
+    public static function provideTestUnpack(): array
     {
         return [
             [0,   pack("d", 0)],

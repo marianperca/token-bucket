@@ -2,6 +2,7 @@
 
 namespace bandwidthThrottle\tokenBucket\storage;
 
+use PHPUnit\Framework\TestCase;
 use Redis;
 
 /**
@@ -14,7 +15,7 @@ use Redis;
  * @license WTFPL
  * @see PHPRedisStorage
  */
-class PHPRedisStorageTest extends \PHPUnit_Framework_TestCase
+class PHPRedisStorageTest extends TestCase
 {
 
     /**
@@ -27,7 +28,7 @@ class PHPRedisStorageTest extends \PHPUnit_Framework_TestCase
      */
     private $storage;
     
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         
@@ -46,11 +47,13 @@ class PHPRedisStorageTest extends \PHPUnit_Framework_TestCase
      *
      * @param callable $method The tested method.
      * @test
-     * @expectedException bandwidthThrottle\tokenBucket\storage\StorageException
+     *
      * @dataProvider provideTestBrokenCommunication
      */
     public function testBrokenCommunication(callable $method)
     {
+        $this->expectException(StorageException::class);
+
         $this->redis->close();
         call_user_func($method, $this->storage);
     }
@@ -60,7 +63,7 @@ class PHPRedisStorageTest extends \PHPUnit_Framework_TestCase
      *
      * @return array Testcases.
      */
-    public function provideTestBrokenCommunication()
+    public static function provideTestBrokenCommunication()
     {
         return [
             [function (PHPRedisStorage $storage) {
@@ -85,10 +88,11 @@ class PHPRedisStorageTest extends \PHPUnit_Framework_TestCase
      * Tests remove() fails.
      *
      * @test
-     * @expectedException bandwidthThrottle\tokenBucket\storage\StorageException
      */
     public function testRemoveFails()
     {
+        $this->expectException(StorageException::class);
+
         $this->storage->bootstrap(1);
         $this->storage->remove();
 
@@ -99,10 +103,11 @@ class PHPRedisStorageTest extends \PHPUnit_Framework_TestCase
      * Tests setMicrotime() fails.
      *
      * @test
-     * @expectedException bandwidthThrottle\tokenBucket\storage\StorageException
      */
     public function testSetMicrotimeFails()
     {
+        $this->expectException(StorageException::class);
+
         $redis = $this->createMock(Redis::class);
         $redis->expects($this->once())->method("set")
                 ->willReturn(false);
@@ -114,10 +119,11 @@ class PHPRedisStorageTest extends \PHPUnit_Framework_TestCase
      * Tests getMicrotime() fails.
      *
      * @test
-     * @expectedException bandwidthThrottle\tokenBucket\storage\StorageException
      */
     public function testGetMicrotimeFails()
     {
+        $this->expectException(StorageException::class);
+
         $this->storage->bootstrap(1);
         $this->storage->remove();
 

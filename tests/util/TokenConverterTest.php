@@ -4,6 +4,7 @@ namespace bandwidthThrottle\tokenBucket\util;
 
 use bandwidthThrottle\tokenBucket\Rate;
 use phpmock\phpunit\PHPMock;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests for TokenConverter.
@@ -13,7 +14,7 @@ use phpmock\phpunit\PHPMock;
  * @license WTFPL
  * @see TokenConverter
  */
-class TokenConverterTest extends \PHPUnit_Framework_TestCase
+class TokenConverterTest extends TestCase
 {
 
     use PHPMock;
@@ -39,7 +40,7 @@ class TokenConverterTest extends \PHPUnit_Framework_TestCase
      *
      * @return array Test cases.
      */
-    public function provideTestConvertSecondsToTokens()
+    public static function provideTestConvertSecondsToTokens(): array
     {
         return [
             [0, 0.9, new Rate(1, Rate::SECOND)],
@@ -63,9 +64,9 @@ class TokenConverterTest extends \PHPUnit_Framework_TestCase
      * @param Rate   $rate     The rate.
      *
      * @test
-     * @dataProvider provideTestconvertTokensToSeconds
+     * @dataProvider provideTestConvertTokensToSeconds
      */
-    public function testconvertTokensToSeconds($expected, $tokens, Rate $rate)
+    public function testConvertTokensToSeconds($expected, $tokens, Rate $rate)
     {
         $converter = new TokenConverter($rate);
         $this->assertEquals($expected, $converter->convertTokensToSeconds($tokens));
@@ -76,7 +77,7 @@ class TokenConverterTest extends \PHPUnit_Framework_TestCase
      *
      * @return array Test cases.
      */
-    public function provideTestconvertTokensToSeconds()
+    public static function provideTestConvertTokensToSeconds(): array
     {
         return [
             [0.001, 1, new Rate(1, Rate::MILLISECOND)],
@@ -111,7 +112,7 @@ class TokenConverterTest extends \PHPUnit_Framework_TestCase
      *
      * @return array Test cases.
      */
-    public function provideTestConvertTokensToMicrotime()
+    public static function provideTestConvertTokensToMicrotime(): array
     {
         return [
             [-1, 1, new Rate(1, Rate::SECOND)],

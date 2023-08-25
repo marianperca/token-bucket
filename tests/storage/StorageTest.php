@@ -3,6 +3,7 @@
 namespace bandwidthThrottle\tokenBucket\storage;
 
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\TestCase;
 use Redis;
 use Predis\Client;
 use bandwidthThrottle\tokenBucket\TokenBucket;
@@ -24,7 +25,7 @@ use bandwidthThrottle\tokenBucket\Rate;
  * @license WTFPL
  * @see Storage
  */
-class StorageTest extends \PHPUnit_Framework_TestCase
+class StorageTest extends TestCase
 {
 
     /**
@@ -32,7 +33,7 @@ class StorageTest extends \PHPUnit_Framework_TestCase
      */
     private $storage;
     
-    protected function tearDown()
+    protected function tearDown(): void
     {
         if (!is_null($this->storage) && $this->storage->isBootstrapped()) {
             $this->storage->remove();
@@ -44,7 +45,7 @@ class StorageTest extends \PHPUnit_Framework_TestCase
      *
      * @return callable[][] Storage factories.
      */
-    public function provideStorageFactories()
+    public static function provideStorageFactories(): array
     {
         $cases = [
             "SingleProcessStorage" => [function () {

@@ -5,6 +5,7 @@ namespace bandwidthThrottle\tokenBucket;
 use phpmock\environment\SleepEnvironmentBuilder;
 use phpmock\environment\MockEnvironment;
 use bandwidthThrottle\tokenBucket\storage\SingleProcessStorage;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test for BlockingConsumer.
@@ -14,15 +15,15 @@ use bandwidthThrottle\tokenBucket\storage\SingleProcessStorage;
  * @license WTFPL
  * @see BlockingConsumer
  */
-class BlockingConsumerTest extends \PHPUnit_Framework_TestCase
+class BlockingConsumerTest extends TestCase
 {
     
     /**
      * @var MockEnvironment Mock for microtime() and usleep().
      */
     private $sleepEnvironent;
-    
-    protected function setUp()
+
+    protected function setUp(): void
     {
         $builder = new SleepEnvironmentBuilder();
         $builder->addNamespace(__NAMESPACE__)
@@ -33,7 +34,7 @@ class BlockingConsumerTest extends \PHPUnit_Framework_TestCase
         $this->sleepEnvironent->enable();
     }
     
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->sleepEnvironent->disable();
     }
@@ -92,7 +93,7 @@ class BlockingConsumerTest extends \PHPUnit_Framework_TestCase
      *
      * @return array Test cases.
      */
-    public function provideTestConsume()
+    public static function provideTestConsume(): array
     {
         return [
             [0.5,  500, new Rate(1, Rate::MILLISECOND)],
@@ -124,7 +125,6 @@ class BlockingConsumerTest extends \PHPUnit_Framework_TestCase
     /**
      * consume() should fail after a timeout.
      *
-     * @expectedException \bandwidthThrottle\tokenBucket\TimeoutException
      * @test
      */
     public function consumeShouldFailAfterTimeout()
@@ -133,7 +133,8 @@ class BlockingConsumerTest extends \PHPUnit_Framework_TestCase
         $bucket = new TokenBucket(1, $rate, new SingleProcessStorage());
         $bucket->bootstrap(0);
         $consumer = new BlockingConsumer($bucket, 9);
-        
+
+        $this->expectException(TimeoutException::class);
         $consumer->consume(1);
     }
     
@@ -144,6 +145,8 @@ class BlockingConsumerTest extends \PHPUnit_Framework_TestCase
      */
     public function consumeShouldNotFailBeforeTimeout()
     {
+        $this->expectNotToPerformAssertions();
+
         $rate = new Rate(0.1, Rate::SECOND);
         $bucket = new TokenBucket(1, $rate, new SingleProcessStorage());
         $bucket->bootstrap(0);
@@ -153,12 +156,14 @@ class BlockingConsumerTest extends \PHPUnit_Framework_TestCase
     }
     
     /**
-     * consume() should not never time out.
+     * consume() should not time out.
      *
      * @test
      */
     public function consumeWithoutTimeoutShouldNeverFail()
     {
+        $this->expectNotToPerformAssertions();
+
         $rate = new Rate(0.1, Rate::YEAR);
         $bucket = new TokenBucket(1, $rate, new SingleProcessStorage());
         $bucket->bootstrap(0);

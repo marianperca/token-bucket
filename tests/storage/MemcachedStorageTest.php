@@ -2,6 +2,8 @@
 
 namespace bandwidthThrottle\tokenBucket\storage;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Tests for MemcachedStorage.
  *
@@ -12,7 +14,7 @@ namespace bandwidthThrottle\tokenBucket\storage;
  * @license WTFPL
  * @see MemcachedStorage
  */
-class MemcachedStorageTest extends \PHPUnit_Framework_TestCase
+class MemcachedStorageTest extends TestCase
 {
 
     /**
@@ -25,7 +27,7 @@ class MemcachedStorageTest extends \PHPUnit_Framework_TestCase
      */
     private $storage;
     
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -40,7 +42,7 @@ class MemcachedStorageTest extends \PHPUnit_Framework_TestCase
         $this->storage->bootstrap(123);
     }
     
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
         
@@ -66,10 +68,11 @@ class MemcachedStorageTest extends \PHPUnit_Framework_TestCase
      * Tests bootstrap() fails.
      *
      * @test
-     * @expectedException bandwidthThrottle\tokenBucket\storage\StorageException
      */
     public function testBootstrapFails()
     {
+        $this->expectException(StorageException::class);
+
         $storage = new MemcachedStorage("test", new \Memcached());
         $storage->bootstrap(123);
     }
@@ -78,10 +81,10 @@ class MemcachedStorageTest extends \PHPUnit_Framework_TestCase
      * Tests isBootstrapped() fails
      *
      * @test
-     * @expectedException bandwidthThrottle\tokenBucket\storage\StorageException
      */
     public function testIsBootstrappedFails()
     {
+        $this->expectException(StorageException::class);
         $this->markTestIncomplete();
     }
 
@@ -89,10 +92,11 @@ class MemcachedStorageTest extends \PHPUnit_Framework_TestCase
      * Tests remove() fails
      *
      * @test
-     * @expectedException bandwidthThrottle\tokenBucket\storage\StorageException
      */
     public function testRemoveFails()
     {
+        $this->expectException(StorageException::class);
+
         $storage = new MemcachedStorage("test", new \Memcached());
         $storage->remove();
     }
@@ -101,10 +105,10 @@ class MemcachedStorageTest extends \PHPUnit_Framework_TestCase
      * Tests setMicrotime() fails if getMicrotime() wasn't called first.
      *
      * @test
-     * @expectedException bandwidthThrottle\tokenBucket\storage\StorageException
      */
     public function testSetMicrotimeFailsIfGetMicrotimeNotCalledFirst()
     {
+        $this->expectException(StorageException::class);
         $this->storage->setMicrotime(123);
     }
 
@@ -112,10 +116,11 @@ class MemcachedStorageTest extends \PHPUnit_Framework_TestCase
      * Tests setMicrotime() fails.
      *
      * @test
-     * @expectedException bandwidthThrottle\tokenBucket\storage\StorageException
      */
     public function testSetMicrotimeFails()
     {
+        $this->expectException(StorageException::class);
+
         $this->storage->getMicrotime();
         $this->memcached->resetServerList();
         $this->storage->setMicrotime(123);
@@ -144,10 +149,11 @@ class MemcachedStorageTest extends \PHPUnit_Framework_TestCase
      * Tests getMicrotime() fails.
      *
      * @test
-     * @expectedException bandwidthThrottle\tokenBucket\storage\StorageException
      */
     public function testGetMicrotimeFails()
     {
+        $this->expectException(StorageException::class);
+
         $storage = new MemcachedStorage("test", new \Memcached());
         $storage->getMicrotime();
     }

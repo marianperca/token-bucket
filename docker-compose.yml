@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+    app:
+      build:
+        context: ./docker
+        dockerfile: Dockerfile
+      image: app-8.1
+      volumes:
+        - ./:/usr/src/app
+
+        
